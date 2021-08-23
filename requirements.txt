@@ -1,0 +1,9 @@
+librosa==0.8.1
+matplotlib==3.4.3
+tensorflow==2.6.0
+torch==1.9.0
+pydub==0.24.1
+torchvision==0.10.0
+numpy==1.19.5
+numba==0.51.2
+PyAudio==0.2.11

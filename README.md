@@ -67,7 +67,7 @@ Follow the Below Instructions for setting the project up on your local Machine.
 
 
 ### Installation
-1. Create a python virtual environment
+1. Create a python 3.7 virtual environment
 ```sh
 sudo apt install python3-venv
 mkdir mevonAI
@@ -82,9 +82,9 @@ git clone https://github.com/SuyashMore/MevonAI-Speech-Emotion-Recognition.git
 3. Install Dependencies
 ```sh
 cd MevonAI-Speech-Emotion-Recognition/
-cd src/
-sudo chmod +x setup.sh
-./setup.sh
+sudo chmod +x install_system_dependencies.sh
+./install_system_dependencies.sh
+python3 -m pip install -r requirements.txt
 ```
 
 ### Running the Application
