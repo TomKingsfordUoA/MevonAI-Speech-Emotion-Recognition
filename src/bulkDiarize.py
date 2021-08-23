@@ -1,13 +1,13 @@
 import os
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-from speakerDiarization import diarizeAudio
+from speakerDiarization import diarizeAudio, collect_args
 import gc
 from pydub import AudioSegment
 import time
 
 
-def diarizeFromFolder(fromFolder,toFolder):
+def diarizeFromFolder(fromFolder,toFolder,args=None):
     INPUT_FOLDER_PATH = fromFolder
     OUTPUT_FOLDER_PATH = toFolder
 
@@ -26,7 +26,7 @@ def diarizeFromFolder(fromFolder,toFolder):
 
         audioSeconds = AudioSegment.from_file(TOTAL_PATH).duration_seconds
         start = time.time()
-        diarizeAudio(TOTAL_PATH,TOTAL_OUTPUT_PATH,expectedSpeakers=2)
+        diarizeAudio(TOTAL_PATH,TOTAL_OUTPUT_PATH,expectedSpeakers=2,args=args)
         end = time.time()
 
         computeTime = end-start
@@ -47,7 +47,8 @@ def diarizeFromFolder(fromFolder,toFolder):
 
 
 if __name__=="__main__":
+    args = collect_args()
     INPUT_FOLDER_PATH = "wavs/"
     OUTPUT_FOLDER_PATH = "Output/"
-    diarizeFromFolder(INPUT_FOLDER_PATH,OUTPUT_FOLDER_PATH)
+    diarizeFromFolder(INPUT_FOLDER_PATH,OUTPUT_FOLDER_PATH,args=args)
 

@@ -1,10 +1,16 @@
 from __future__ import print_function
 from __future__ import absolute_import
+
+import os
+import sys
+
 import keras
 import tensorflow as tf
 import keras.backend as K
 
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))  # TODO(TK): replace this with a correct import when mevonai is a package
 import backbone
+
 weight_decay = 1e-4
 
 

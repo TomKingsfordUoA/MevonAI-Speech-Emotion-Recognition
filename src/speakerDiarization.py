@@ -1,39 +1,18 @@
 
 """A demo script showing how to DIARIZATION ON WAV USING UIS-RNN."""
-
-import numpy as np
-import uisrnn
-import librosa
-import sys
-sys.path.append('ghostvlad')
-sys.path.append('visualization')
-import toolkits
-import model as spkModel
 import os
-from viewer import PlotDiar
-import filterAudio
-
-# ===========================================
-#        Parse thse argument
-# ===========================================
+import sys
 import argparse
-parser = argparse.ArgumentParser()
-# set up training configuration.
-parser.add_argument('--gpu', default='', type=str)
-parser.add_argument('--resume', default=r'ghostvlad/pretrained/weights.h5', type=str)
-parser.add_argument('--data_path', default='2persons', type=str)
-# set up network configuration.
-parser.add_argument('--net', default='resnet34s', choices=['resnet34s', 'resnet34l'], type=str)
-parser.add_argument('--ghost_cluster', default=2, type=int)
-parser.add_argument('--vlad_cluster', default=8, type=int)
-parser.add_argument('--bottleneck_dim', default=512, type=int)
-parser.add_argument('--aggregation_mode', default='gvlad', choices=['avg', 'vlad', 'gvlad'], type=str)
-# set up learning rate, training loss and optimizer.
-parser.add_argument('--loss', default='softmax', choices=['softmax', 'amsoftmax'], type=str)
-parser.add_argument('--test_type', default='normal', choices=['normal', 'hard', 'extend'], type=str)
 
-global args
-args = parser.parse_args()
+import librosa
+import numpy as np
+
+import uisrnn
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+import ghostvlad.toolkits as toolkits
+import ghostvlad.model as spkModel
+import filterAudio
 
 
 SAVED_MODEL_NAME = 'pretrained/saved_model.uisrnn_benchmark'
@@ -132,7 +111,7 @@ def load_data(path, win_length=400, sr=16000, hop_length=160, n_fft=512, embeddi
 
     return utterances_spec, intervals
 
-def main(wav_path, embedding_per_second=1.0, overlap_rate=0.5,exportFile=None,expectedSpeakers=2):
+def main(wav_path, embedding_per_second=1.0, overlap_rate=0.5,exportFile=None,expectedSpeakers=2,args=None):
 
     # gpu configuration
     toolkits.initialize_GPU(args)
@@ -234,20 +213,40 @@ def diarization_try(parentClip,t1,t2,speakernumber):
     speakerTemp = pdb.from_wav(Audio)
     speaker_final[speakernumber] += speakerTemp[t1:t2]
 
-def diarizeAudio(inputFile,exportFile,expectedSpeakers=2):
+def diarizeAudio(inputFile,exportFile,expectedSpeakers=2,args=None):
     FILE_N = inputFile
     print("Filtering:",FILE_N)
     filterAudio.filterWav(FILE_N,"filterTemp.wav")
     print("Filtering Complete")
-    main("filterTemp.wav", embedding_per_second=0.6, overlap_rate=0.4,exportFile=exportFile,expectedSpeakers=expectedSpeakers)
+    main("filterTemp.wav", embedding_per_second=0.6, overlap_rate=0.4,exportFile=exportFile,expectedSpeakers=expectedSpeakers,args=args)
 
+
+def collect_args():
+    parser = argparse.ArgumentParser()
+    # set up training configuration.
+    parser.add_argument('--gpu', default='', type=str)
+    parser.add_argument('--resume', default=r'ghostvlad/pretrained/weights.h5', type=str)
+    parser.add_argument('--data_path', default='2persons', type=str)
+    # set up network configuration.
+    parser.add_argument('--net', default='resnet34s', choices=['resnet34s', 'resnet34l'], type=str)
+    parser.add_argument('--ghost_cluster', default=2, type=int)
+    parser.add_argument('--vlad_cluster', default=8, type=int)
+    parser.add_argument('--bottleneck_dim', default=512, type=int)
+    parser.add_argument('--aggregation_mode', default='gvlad', choices=['avg', 'vlad', 'gvlad'], type=str)
+    # set up learning rate, training loss and optimizer.
+    parser.add_argument('--loss', default='softmax', choices=['softmax', 'amsoftmax'], type=str)
+    parser.add_argument('--test_type', default='normal', choices=['normal', 'hard', 'extend'], type=str)
+
+    return parser.parse_args()
 
 if __name__ == '__main__':
+    args = collect_args()
+
     FILE_N = "m6.wav"
     print("Filtering")
     filterAudio.filterWav(FILE_N,"filter_"+FILE_N)
     filtered = pdb.from_wav("filter_"+FILE_N)
     filtered.export("Amp-filter_"+FILE_N, format= "wav")
     print("Filtering Complete")
-    main("filter_"+FILE_N, embedding_per_second=0.6, overlap_rate=0.4)
+    main("filter_"+FILE_N, embedding_per_second=0.6, overlap_rate=0.4, args=args)
 
