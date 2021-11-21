@@ -2,3 +2,5 @@
 __pycache__
 /src/SER_*
 /src/output/
+/venv
+/mevonai.h5

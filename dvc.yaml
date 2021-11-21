@@ -1,0 +1,19 @@
+stages:
+  train:
+    cmd: 'python notebooks/train.py '
+    deps:
+    - data/train_ravdess.csv
+    - notebooks/train.py
+    outs:
+    - mevonai.h5
+  predict:
+    cmd: python -m notebooks.predict
+    deps:
+    - data/RAVDESS_extracted
+    - data/test_ravdess.csv
+    - data/train_ravdess.csv
+    - mevonai.h5
+    - notebooks/predict.py
+    outs:
+    - data/test_pred.csv
+    - data/train_pred.csv

@@ -1,0 +1,16 @@
+stages:
+  extract_ravdess:
+    cmd: python extract_ravdess.py
+    deps:
+    - RAVDESS
+    - extract_ravdess.py
+    outs:
+    - RAVDESS_extracted
+  split_data:
+    cmd: python split_data.py
+    deps:
+    - RAVDESS_extracted
+    - split_data.py
+    outs:
+    - test_ravdess.csv
+    - train_ravdess.csv

@@ -1,0 +1,41 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: 'python notebooks/train.py '
+    deps:
+    - path: data/train_ravdess.csv
+      md5: 1e5e785700ac92133a7cc99af66fc5e5
+      size: 71225
+    - path: notebooks/train.py
+      md5: 9dc89c4af19d91edcd62be29ab33855a
+      size: 3601
+    outs:
+    - path: mevonai.h5
+      md5: b160bcbbe72e7964876a18a4d2dc6c71
+      size: 2263336
+  predict:
+    cmd: python -m notebooks.predict
+    deps:
+    - path: data/RAVDESS_extracted
+      md5: 199b3fe4b28145788675ea28122352ae.dir
+      size: 26648482148
+      nfiles: 7356
+    - path: data/test_ravdess.csv
+      md5: db6b062178cd6823b8bf713d1293ac60
+      size: 18753
+    - path: data/train_ravdess.csv
+      md5: 1e5e785700ac92133a7cc99af66fc5e5
+      size: 71225
+    - path: mevonai.h5
+      md5: b160bcbbe72e7964876a18a4d2dc6c71
+      size: 2263336
+    - path: notebooks/predict.py
+      md5: 6d93f5ffe8f5939310d0898e1975455f
+      size: 1757
+    outs:
+    - path: data/test_pred.csv
+      md5: 24505e22fbf93352e974b0ac64d3f4bb
+      size: 53984
+    - path: data/train_pred.csv
+      md5: 6b620662f68a13438648cdbf924d957b
+      size: 207636
